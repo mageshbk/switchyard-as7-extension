@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.switchyard</groupId>
+        <artifactId>switchyard-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.switchyard</groupId>
+    <artifactId>switchyard-as7</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>SwitchYard: AS7</name>
+    <description>SwitchYard AS7</description>
+
+    <properties>
+        <version.org.jboss.jbossas>7.0.0.Beta2</version.org.jboss.jbossas>
+    </properties>
+    <modules>
+        <module>as7-extension</module>
+        <module>build</module>
+    </modules>
+
+    <dependencies>
+        <!-- internal dependencies -->
+        <!-- external dependencies -->
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-controller</artifactId>
+            <version>${version.org.jboss.jbossas}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-server</artifactId>
+            <version>${version.org.jboss.jbossas}</version>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+        <!-- external dependencies -->
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-controller</artifactId>
+            <version>${version.org.jboss.jbossas}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-server</artifactId>
+            <version>${version.org.jboss.jbossas}</version>
+        </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
