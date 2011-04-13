@@ -22,35 +22,4 @@
         <module>as7-extension</module>
         <module>build</module>
     </modules>
-
-    <dependencies>
-        <!-- internal dependencies -->
-        <!-- external dependencies -->
-        <dependency>
-            <groupId>org.jboss.as</groupId>
-            <artifactId>jboss-as-controller</artifactId>
-            <version>${version.org.jboss.jbossas}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.as</groupId>
-            <artifactId>jboss-as-server</artifactId>
-            <version>${version.org.jboss.jbossas}</version>
-        </dependency>
-    </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-        <!-- external dependencies -->
-        <dependency>
-            <groupId>org.jboss.as</groupId>
-            <artifactId>jboss-as-controller</artifactId>
-            <version>${version.org.jboss.jbossas}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.as</groupId>
-            <artifactId>jboss-as-server</artifactId>
-            <version>${version.org.jboss.jbossas}</version>
-        </dependency>
-        </dependencies>
-    </dependencyManagement>
 </project>

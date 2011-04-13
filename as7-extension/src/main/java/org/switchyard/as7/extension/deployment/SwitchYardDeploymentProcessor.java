@@ -20,6 +20,16 @@ package org.switchyard.as7.extension.deployment;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.Enumeration;
+
+import javax.naming.Binding;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
 
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
@@ -27,7 +37,11 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.logging.Logger;
 import org.jboss.modules.ModuleIdentifier;
+import org.jboss.msc.service.ServiceBuilder;
+import org.jboss.msc.service.ServiceName;
+import org.jboss.msc.service.ServiceTarget;
 import org.switchyard.as7.extension.SwitchYardDeploymentMarker;
+import org.switchyard.as7.extension.services.SwitchYardService;
 import org.switchyard.config.model.ModelResource;
 import org.switchyard.config.model.switchyard.SwitchYardModel;
 
@@ -48,15 +62,28 @@ public class SwitchYardDeploymentProcessor implements DeploymentUnitProcessor {
             return;
         }
         LOG.info("Deploying SwitchYard application '" + deploymentUnit.getName() + "'");
+
+        try {
+            Context ctx = (Context)new InitialContext().lookup("/");
+            listContext(ctx, "", System.out);
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+        
         SwitchYardMetaData metaData = deploymentUnit.getAttachment(SwitchYardMetaData.ATTACHMENT_KEY);
         try {
             InputStream is = metaData.getSwitchYardFile().openStream();
             SwitchYardModel switchyardModel = new ModelResource<SwitchYardModel>().pull(is);
             is.close();
             SwitchYardDeployment deployment = new SwitchYardDeployment(deploymentUnit, switchyardModel);
-            deployment.create();
+            SwitchYardService container = new SwitchYardService(deployment);
+            final ServiceTarget serviceTarget = phaseContext.getServiceTarget();
+            final ServiceName switchyardService = deploymentUnit.getServiceName().append(SwitchYardService.SERVICE_NAME);
+            final ServiceBuilder<SwitchYardDeployment> switchyardServiceBuilder = serviceTarget.addService(switchyardService, container);
+            switchyardServiceBuilder.install();
+            /*deployment.create();
             deployment.start();
-            deploymentUnit.putAttachment(SwitchYardDeployment.ATTACHMENT_KEY, deployment);
+            deploymentUnit.putAttachment(SwitchYardDeployment.ATTACHMENT_KEY, deployment);*/
             LOG.info(deploymentUnit.getName() + " deployed.");
         } catch (IOException ioe) {
             throw new DeploymentUnitProcessingException(ioe);
@@ -66,13 +93,29 @@ public class SwitchYardDeploymentProcessor implements DeploymentUnitProcessor {
     @Override
     public void undeploy(DeploymentUnit deploymentUnit) {
         LOG.info("Undeploying SwitchYard application '" + deploymentUnit.getName() + "'");
-        SwitchYardDeployment deployment = deploymentUnit.removeAttachment(SwitchYardDeployment.ATTACHMENT_KEY);
+        /*SwitchYardDeployment deployment = deploymentUnit.removeAttachment(SwitchYardDeployment.ATTACHMENT_KEY);
         if (deployment == null) {
             return;
         }
         deployment.stop();
-        deployment.destroy();
+        deployment.destroy();*/
         LOG.info("Application '" + deploymentUnit.getName() + "' stopped.");
+    }
+
+    private void listContext(Context ctx, String indent, PrintStream out) {
+        try {
+            NamingEnumeration<Binding> list = ctx.listBindings("");
+            while (list.hasMore()) {
+                Binding item = list.next();
+                String className = item.getClassName();
+                String name = item.getName();
+                out.println(indent + className + " " + name);
+                Object o = item.getObject();
+                if (o instanceof javax.naming.Context) {
+                   listContext((Context) o, indent + " ",out);
+                }
+            }
+        } catch (Exception ex) { ex.printStackTrace(); }
     }
 
 }

@@ -38,7 +38,7 @@ import org.jboss.dmr.ModelNode;
  *
  */
 final class SwitchYardSubsystemProviders {
-    static final String RESOURCE_NAME = SwitchYardSubsystemProviders.class.getPackage().getName() + ".LocalDescriptions";
+    static final String RESOURCE_NAME = "org.switchyard.as7.extension.LocalDescriptions";//SwitchYardSubsystemProviders.class.getPackage().getName() + ".LocalDescriptions";
 
     private SwitchYardSubsystemProviders() {
     }

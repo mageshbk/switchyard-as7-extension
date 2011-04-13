@@ -54,28 +54,21 @@ public final class SwitchYardSubsystemAdd implements ModelAddOperationHandler, B
     }
 
     @Override
-    public OperationResult execute(final OperationContext context, final ModelNode operation,
-            final ResultHandler resultHandler) throws OperationFailedException {
+    public OperationResult execute(final OperationContext context, final ModelNode operation, final ResultHandler resultHandler) throws OperationFailedException {
+
+        LOG.info("Handling SwitchYard Extension");
         if (context instanceof BootOperationContext) {
             final BootOperationContext bootContext = (BootOperationContext) context;
-            context.getRuntimeContext().setRuntimeTask(new RuntimeTask() {
-                public void execute(RuntimeTaskContext context) throws OperationFailedException {
-                    
-                }
-            });
             LOG.info("Activating SwitchYard Extension");
             int priority = 0x4000;
-            bootContext.addDeploymentProcessor(Phase.PARSE, priority++, new SwitchYardConfigDeploymentProcessor());
+            bootContext.addDeploymentProcessor(Phase.PARSE, 0x100F, new SwitchYardConfigDeploymentProcessor());
             bootContext.addDeploymentProcessor(Phase.DEPENDENCIES, priority++, new SwitchYardDependencyProcessor());
-            bootContext.addDeploymentProcessor(Phase.INSTALL, priority++, new CDIJNDIDeploymentProcessor());
             bootContext.addDeploymentProcessor(Phase.INSTALL, priority++, new SwitchYardDeploymentProcessor());
-            resultHandler.handleResultComplete();
-        } else {
-            resultHandler.handleResultComplete();
         }
-
+        context.getSubModel().setEmptyObject();
         // Create the compensating operation
         final ModelNode compensatingOperation = Util.getResourceRemoveOperation(operation.require(OP_ADDR));
+        resultHandler.handleResultComplete();
         return new BasicOperationResult(compensatingOperation);
     }
 

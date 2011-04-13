@@ -15,4 +15,29 @@
     <packaging>jar</packaging>
     <name>SwitchYard: AS7 Extension</name>
     <description>SwitchYard AS7 Extension and Subsystem</description>
+
+    <dependencies>
+        <!-- internal dependencies -->
+        <!-- external dependencies -->
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-controller</artifactId>
+            <version>${version.org.jboss.jbossas}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-server</artifactId>
+            <version>${version.org.jboss.jbossas}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-naming</artifactId>
+            <version>${version.org.jboss.jbossas}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-ee</artifactId>
+            <version>${version.org.jboss.jbossas}</version>
+        </dependency>
+    </dependencies>
 </project>
