@@ -33,17 +33,31 @@
         <resource-root path="switchyard-runtime-${project.parent.version}.jar"/>
         <resource-root path="switchyard-transform-${project.parent.version}.jar"/>
         <resource-root path="switchyard-deploy-jboss-as7-${project.parent.version}.jar"/>
+        <!-- Uncomment for bean component 
+        <resource-root path="switchyard-component-bean-${project.parent.version}.jar"/>
+        -->
+        <!-- Uncomment for soap component 
+        <resource-root path="switchyard-component-soap-${project.parent.version}.jar"/>
+        -->
     </resources>
 
     <dependencies>
         <module name="javax.api"/>
+        <module name="org.jboss.as.controller"/>
+        <module name="org.jboss.staxmapper"/>
         <module name="org.jboss.logging"/>
         <module name="org.jboss.modules"/>
-        <module name="org.jboss.staxmapper"/>
         <module name="org.jboss.vfs"/>
-        <module name="org.jboss.as.controller"/>
+        <module name="org.jboss.as.ee"/>
+        <module name="org.jboss.as.naming"/>
         <module name="org.jboss.as.server"/>
         <module name="org.apache.log4j"/>
         <module name="org.milyn"/>
+        <module name="org.jboss.as.weld"/>
+        <!-- SOAP component 
+        <module name="javax.wsdl4j.api"/>
+        <module name="javax.xml.soap.api"/>
+        <module name="javax.xml.ws.api"/>
+        -->
     </dependencies>
 </module>
