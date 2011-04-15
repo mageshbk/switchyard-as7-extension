@@ -36,8 +36,14 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.as</groupId>
-            <artifactId>jboss-as-ee</artifactId>
+            <artifactId>jboss-as-weld</artifactId>
             <version>${version.org.jboss.jbossas}</version>
+        </dependency>
+        <!-- Findbug needs it -->
+        <dependency>
+            <groupId>org.jboss.classfilewriter</groupId>
+            <artifactId>jboss-classfilewriter</artifactId>
+            <version>1.0.0.Alpha6</version>
         </dependency>
     </dependencies>
 </project>

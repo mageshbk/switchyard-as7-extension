@@ -18,7 +18,6 @@
  */
 package org.switchyard.as7.extension.deployment;
 
-import org.jboss.as.naming.context.NamespaceContextSelector;
 import org.jboss.as.server.deployment.AttachmentKey;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentUnit;
@@ -37,6 +36,7 @@ public class SwitchYardDeployment extends Deployment {
     public static final AttachmentKey<SwitchYardDeployment> ATTACHMENT_KEY = AttachmentKey.create(SwitchYardDeployment.class);
 
     private final DeploymentUnit _deployUnit;
+    private SwitchYardDeploymentState _deploymentState;
  
     /**
      * Creates a new SwitchYard deployment.
@@ -65,14 +65,13 @@ public class SwitchYardDeployment extends Deployment {
      * Start the application.
      */
     public void start() {
-        System.out.println("Context selector " + NamespaceContextSelector.getCurrentSelector());
-        
         final Module module = _deployUnit.getAttachment(Attachments.MODULE);
         ClassLoader origCL = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(module.getClassLoader());
             super.init();
             super.start();
+            setDeploymentState(SwitchYardDeploymentState.STARTED);
         } finally {
             Thread.currentThread().setContextClassLoader(origCL);
         }
@@ -88,8 +87,25 @@ public class SwitchYardDeployment extends Deployment {
             Thread.currentThread().setContextClassLoader(module.getClassLoader());
             super.stop();
             super.destroy();
+            setDeploymentState(SwitchYardDeploymentState.STOPPED);
         } finally {
             Thread.currentThread().setContextClassLoader(origCL);
         }
+    }
+
+    /**
+     * Set the deployment state.
+     * @param deploymentState the deployment state
+     */
+    public void setDeploymentState(SwitchYardDeploymentState deploymentState) {
+        this._deploymentState = deploymentState;
+    }
+
+    /**
+     * Get the deployment state.
+     * @return DeploymentState
+     */
+    public SwitchYardDeploymentState getDeploymentState() {
+        return _deploymentState;
     }
 }

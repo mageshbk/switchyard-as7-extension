@@ -26,15 +26,12 @@ import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.OperationResult;
 import org.jboss.as.controller.ResultHandler;
-import org.jboss.as.controller.RuntimeTask;
-import org.jboss.as.controller.RuntimeTaskContext;
 import org.jboss.as.controller.operations.common.Util;
 import org.jboss.as.server.BootOperationContext;
 import org.jboss.as.server.BootOperationHandler;
 import org.jboss.as.server.deployment.Phase;
 import org.jboss.dmr.ModelNode;
 import org.jboss.logging.Logger;
-import org.switchyard.as7.extension.deployment.CDIJNDIDeploymentProcessor;
 import org.switchyard.as7.extension.deployment.SwitchYardConfigDeploymentProcessor;
 import org.switchyard.as7.extension.deployment.SwitchYardDependencyProcessor;
 import org.switchyard.as7.extension.deployment.SwitchYardDeploymentProcessor;
@@ -61,7 +58,7 @@ public final class SwitchYardSubsystemAdd implements ModelAddOperationHandler, B
             final BootOperationContext bootContext = (BootOperationContext) context;
             LOG.info("Activating SwitchYard Extension");
             int priority = 0x4000;
-            bootContext.addDeploymentProcessor(Phase.PARSE, 0x100F, new SwitchYardConfigDeploymentProcessor());
+            bootContext.addDeploymentProcessor(Phase.PARSE, priority++, new SwitchYardConfigDeploymentProcessor());
             bootContext.addDeploymentProcessor(Phase.DEPENDENCIES, priority++, new SwitchYardDependencyProcessor());
             bootContext.addDeploymentProcessor(Phase.INSTALL, priority++, new SwitchYardDeploymentProcessor());
         }

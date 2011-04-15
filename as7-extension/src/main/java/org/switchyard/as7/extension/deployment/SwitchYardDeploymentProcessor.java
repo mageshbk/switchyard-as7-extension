@@ -20,24 +20,17 @@ package org.switchyard.as7.extension.deployment;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Enumeration;
 
-import javax.naming.Binding;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.RefAddr;
-import javax.naming.Reference;
-
+import org.jboss.as.ee.naming.NamespaceSelectorService;
+import org.jboss.as.naming.context.NamespaceContextSelector;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
+import org.jboss.as.weld.services.BeanManagerService;
 import org.jboss.logging.Logger;
-import org.jboss.modules.ModuleIdentifier;
 import org.jboss.msc.service.ServiceBuilder;
+import org.jboss.msc.service.ServiceController.Mode;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.ServiceTarget;
 import org.switchyard.as7.extension.SwitchYardDeploymentMarker;
@@ -51,8 +44,6 @@ import org.switchyard.config.model.switchyard.SwitchYardModel;
  */
 public class SwitchYardDeploymentProcessor implements DeploymentUnitProcessor {
 
-    private static ModuleIdentifier SWITCHYARD_ID = ModuleIdentifier.create("org.switchyard");
-
     private static final Logger LOG = Logger.getLogger("org.switchyard");
 
     @Override
@@ -63,13 +54,6 @@ public class SwitchYardDeploymentProcessor implements DeploymentUnitProcessor {
         }
         LOG.info("Deploying SwitchYard application '" + deploymentUnit.getName() + "'");
 
-        try {
-            Context ctx = (Context)new InitialContext().lookup("/");
-            listContext(ctx, "", System.out);
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-        
         SwitchYardMetaData metaData = deploymentUnit.getAttachment(SwitchYardMetaData.ATTACHMENT_KEY);
         try {
             InputStream is = metaData.getSwitchYardFile().openStream();
@@ -78,13 +62,16 @@ public class SwitchYardDeploymentProcessor implements DeploymentUnitProcessor {
             SwitchYardDeployment deployment = new SwitchYardDeployment(deploymentUnit, switchyardModel);
             SwitchYardService container = new SwitchYardService(deployment);
             final ServiceTarget serviceTarget = phaseContext.getServiceTarget();
-            final ServiceName switchyardService = deploymentUnit.getServiceName().append(SwitchYardService.SERVICE_NAME);
-            final ServiceBuilder<SwitchYardDeployment> switchyardServiceBuilder = serviceTarget.addService(switchyardService, container);
+            final ServiceName switchyardServiceName = deploymentUnit.getServiceName().append(SwitchYardService.SERVICE_NAME);
+            final ServiceBuilder<SwitchYardDeployment> switchyardServiceBuilder = serviceTarget.addService(switchyardServiceName, container);
+
+            final ServiceName beanManagerServiceName = deploymentUnit.getServiceName().append(BeanManagerService.NAME);
+
+            final ServiceName namespaceSelectorServiceName = deploymentUnit.getServiceName().append(NamespaceSelectorService.NAME);
+            switchyardServiceBuilder.addDependency(namespaceSelectorServiceName, NamespaceContextSelector.class, container.getNamespaceSelector());
+            switchyardServiceBuilder.addDependency(beanManagerServiceName);
+            switchyardServiceBuilder.setInitialMode(Mode.ACTIVE);
             switchyardServiceBuilder.install();
-            /*deployment.create();
-            deployment.start();
-            deploymentUnit.putAttachment(SwitchYardDeployment.ATTACHMENT_KEY, deployment);*/
-            LOG.info(deploymentUnit.getName() + " deployed.");
         } catch (IOException ioe) {
             throw new DeploymentUnitProcessingException(ioe);
         }
@@ -92,30 +79,6 @@ public class SwitchYardDeploymentProcessor implements DeploymentUnitProcessor {
 
     @Override
     public void undeploy(DeploymentUnit deploymentUnit) {
-        LOG.info("Undeploying SwitchYard application '" + deploymentUnit.getName() + "'");
-        /*SwitchYardDeployment deployment = deploymentUnit.removeAttachment(SwitchYardDeployment.ATTACHMENT_KEY);
-        if (deployment == null) {
-            return;
-        }
-        deployment.stop();
-        deployment.destroy();*/
-        LOG.info("Application '" + deploymentUnit.getName() + "' stopped.");
-    }
-
-    private void listContext(Context ctx, String indent, PrintStream out) {
-        try {
-            NamingEnumeration<Binding> list = ctx.listBindings("");
-            while (list.hasMore()) {
-                Binding item = list.next();
-                String className = item.getClassName();
-                String name = item.getName();
-                out.println(indent + className + " " + name);
-                Object o = item.getObject();
-                if (o instanceof javax.naming.Context) {
-                   listContext((Context) o, indent + " ",out);
-                }
-            }
-        } catch (Exception ex) { ex.printStackTrace(); }
     }
 
 }

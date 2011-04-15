@@ -18,26 +18,41 @@
  */
 package org.switchyard.as7.extension.services;
 
+import org.jboss.as.naming.context.NamespaceContextSelector;
 import org.jboss.logging.Logger;
 import org.jboss.msc.service.Service;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
+import org.jboss.msc.value.InjectedValue;
+import org.switchyard.as7.extension.deployment.SwitchYardDeploymentState;
 import org.switchyard.as7.extension.deployment.SwitchYardDeployment;
 
 /**
+ * The SwitchYard service.
+ * 
  * @author Magesh Kumar B <mageshbk@jboss.com> (C) 2011 Red Hat Inc.
- *
  */
 public class SwitchYardService implements Service<SwitchYardDeployment> {
 
-    public static final ServiceName SERVICE_NAME = ServiceName.of("SwitchYardService");
     private static final Logger LOG = Logger.getLogger("org.switchyard");
-    private SwitchYardDeployment switchyardContainer;
 
-    public SwitchYardService(SwitchYardDeployment switchyardContainer) {
-        this.switchyardContainer = switchyardContainer;
+    /**
+     * Represents a SwitchYard service name.
+     */
+    public static final ServiceName SERVICE_NAME = ServiceName.of("SwitchYardService");
+
+    private final InjectedValue<NamespaceContextSelector> _namespaceSelector = new InjectedValue<NamespaceContextSelector>();
+    private SwitchYardDeployment _switchyardDeployment;
+
+    /**
+     * Constructs a SwitchYard service.
+     * 
+     * @param switchyardDeployment the deployment instance
+     */
+    public SwitchYardService(SwitchYardDeployment switchyardDeployment) {
+        _switchyardDeployment = switchyardDeployment;
     }
 
     @Override
@@ -49,15 +64,31 @@ public class SwitchYardService implements Service<SwitchYardDeployment> {
     @Override
     public void start(StartContext context) throws StartException {
         try {
+            NamespaceContextSelector.pushCurrentSelector(_namespaceSelector.getValue());
             LOG.info("Starting SwitchYard service");
-            switchyardContainer.start();
+            _switchyardDeployment.start();
         } catch (Exception e) {
-            switchyardContainer.stop();
+            e.printStackTrace();
+            _switchyardDeployment.stop();
+        } finally {
+            NamespaceContextSelector.popCurrentSelector();
         }
     }
 
     @Override
     public void stop(StopContext context) {
-        switchyardContainer.stop();
+        if (_switchyardDeployment.getDeploymentState() == SwitchYardDeploymentState.STARTED) {
+            _switchyardDeployment.stop();
+        }
     }
+
+    /**
+     * Injection point for NamespaceContextSelector.
+     * 
+     * @return the NamespaceContextSelector
+     */
+    public InjectedValue<NamespaceContextSelector> getNamespaceSelector() {
+        return _namespaceSelector;
+    }
+
 }

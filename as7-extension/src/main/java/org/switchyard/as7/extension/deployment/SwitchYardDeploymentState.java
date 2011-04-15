@@ -16,36 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package org.switchyard.as7.extension.component;
-
-import org.jboss.as.ee.component.AbstractComponentConfiguration;
-import org.jboss.as.ee.component.AbstractComponentDescription;
-import org.jboss.as.ee.component.EEModuleDescription;
+package org.switchyard.as7.extension.deployment;
 
 /**
  * @author Magesh Kumar B <mageshbk@jboss.com> (C) 2011 Red Hat Inc.
  *
  */
-public class SwitchYardComponentDescription extends
-        AbstractComponentDescription {
-
+public enum SwitchYardDeploymentState {
     /**
-     * Constructor.
-     * 
-     * @param componentName the component name
-     * @param componentClassName the component class name
-     * @param moduleDescription module description
+     * Indicates started state.
      */
-    public SwitchYardComponentDescription(final String componentName, final String componentClassName, final EEModuleDescription moduleDescription) {
-        super(componentName, componentClassName, moduleDescription);
-    }
-
-    /* (non-Javadoc)
-     * @see org.jboss.as.ee.component.AbstractComponentDescription#constructComponentConfiguration()
+    STARTED,
+    /**
+     * Indicates stopped state.
      */
-    @Override
-    protected AbstractComponentConfiguration constructComponentConfiguration() {
-        return new SwitchYardComponentConfiguration(this);
-    }
-
+    STOPPED
 }

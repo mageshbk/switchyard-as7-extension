@@ -18,10 +18,6 @@
  */
 package org.switchyard.as7.extension.deployment;
 
-import static org.jboss.as.ee.component.Attachments.EE_MODULE_DESCRIPTION;
-
-import org.jboss.as.ee.component.ComponentNamingMode;
-import org.jboss.as.ee.component.EEModuleDescription;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
@@ -30,7 +26,6 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.as.server.deployment.module.ResourceRoot;
 import org.jboss.vfs.VirtualFile;
 import org.switchyard.as7.extension.SwitchYardDeploymentMarker;
-import org.switchyard.as7.extension.component.SwitchYardComponentDescription;
 
 /**
  * @author Magesh Kumar B <mageshbk@jboss.com> (C) 2011 Red Hat Inc.
@@ -52,12 +47,6 @@ public class SwitchYardConfigDeploymentProcessor implements DeploymentUnitProces
         if (!switchyardXml.exists()) {
             return;
         }
-        System.out.println("*** Processing SwitchYard Configuration");
-        /*final EEModuleDescription moduleDescription = deploymentUnit.getAttachment(EE_MODULE_DESCRIPTION);
-        final SwitchYardComponentDescription componentDescription = new SwitchYardComponentDescription(deploymentUnit.getName(), deploymentUnit.getClass().getName(), moduleDescription);
-        componentDescription.setNamingMode(ComponentNamingMode.CREATE);
-        moduleDescription.addComponent(componentDescription);*/
-
         final String archiveName = deploymentUnit.getName();
         final String deploymentName = archiveName.substring(0, archiveName.lastIndexOf('.'));
         final SwitchYardMetaData switchYardMetaData = new SwitchYardMetaData(archiveName, deploymentName);

@@ -38,7 +38,6 @@ import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
 import org.jboss.as.controller.registry.ModelNodeRegistration;
 import org.jboss.as.controller.registry.OperationEntry;
 import org.jboss.dmr.ModelNode;
-import org.jboss.logging.Logger;
 import org.jboss.staxmapper.XMLElementReader;
 import org.jboss.staxmapper.XMLElementWriter;
 import org.jboss.staxmapper.XMLExtendedStreamReader;
@@ -49,8 +48,6 @@ import org.jboss.staxmapper.XMLExtendedStreamWriter;
  *
  */
 public class SwitchYardExtension implements Extension {
-
-    private static final Logger LOG = Logger.getLogger("org.switchyard");
 
     /** The subsystem name. */
     public static final String SUBSYSTEM_NAME = "switchyard";

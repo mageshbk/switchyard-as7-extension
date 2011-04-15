@@ -35,7 +35,7 @@ import org.switchyard.as7.extension.SwitchYardDeploymentMarker;
  */
 public class SwitchYardDependencyProcessor implements DeploymentUnitProcessor {
 
-    //private static final ModuleIdentifier JAVAX_EE_API = ModuleIdentifier.create("javaee.api");
+    private static final ModuleIdentifier JAVAX_EE_API = ModuleIdentifier.create("javaee.api");
     private static final ModuleIdentifier JBOSS_NAMING_ID = ModuleIdentifier.create("org.jboss.as.naming");
     private static final ModuleIdentifier JBOSS_SERVER_ID = ModuleIdentifier.create("org.jboss.as.server");
     private static final ModuleIdentifier SWITCHYARD_ID = ModuleIdentifier.create("org.switchyard");
@@ -51,7 +51,7 @@ public class SwitchYardDependencyProcessor implements DeploymentUnitProcessor {
             return;
         }
         final ModuleLoader moduleLoader = Module.getBootModuleLoader();
-        //moduleSpecification.addDependency(new ModuleDependency(moduleLoader, JAVAX_EE_API, false, false, false));
+        moduleSpecification.addDependency(new ModuleDependency(moduleLoader, JAVAX_EE_API, false, false, false));
         moduleSpecification.addDependency(new ModuleDependency(moduleLoader, JBOSS_NAMING_ID, false, false, false));
         moduleSpecification.addDependency(new ModuleDependency(moduleLoader, JBOSS_SERVER_ID, false, false, false));
         moduleSpecification.addDependency(new ModuleDependency(moduleLoader, SWITCHYARD_ID, false, false, false));
