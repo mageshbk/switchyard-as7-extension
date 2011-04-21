@@ -53,7 +53,6 @@ public final class SwitchYardSubsystemAdd implements ModelAddOperationHandler, B
     @Override
     public OperationResult execute(final OperationContext context, final ModelNode operation, final ResultHandler resultHandler) throws OperationFailedException {
 
-        LOG.info("Handling SwitchYard Extension");
         if (context instanceof BootOperationContext) {
             final BootOperationContext bootContext = (BootOperationContext) context;
             LOG.info("Activating SwitchYard Extension");

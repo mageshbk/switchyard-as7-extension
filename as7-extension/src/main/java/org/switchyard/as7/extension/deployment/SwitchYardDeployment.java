@@ -83,11 +83,13 @@ public class SwitchYardDeployment extends Deployment {
     public void stop() {
         ClassLoader origCL = Thread.currentThread().getContextClassLoader();
         try {
-            final Module module = _deployUnit.getAttachment(Attachments.MODULE);
-            Thread.currentThread().setContextClassLoader(module.getClassLoader());
-            super.stop();
-            super.destroy();
-            setDeploymentState(SwitchYardDeploymentState.STOPPED);
+            if (_deploymentState == SwitchYardDeploymentState.STARTED) {
+                final Module module = _deployUnit.getAttachment(Attachments.MODULE);
+                Thread.currentThread().setContextClassLoader(module.getClassLoader());
+                super.stop();
+                super.destroy();
+                setDeploymentState(SwitchYardDeploymentState.STOPPED);
+            }
         } finally {
             Thread.currentThread().setContextClassLoader(origCL);
         }

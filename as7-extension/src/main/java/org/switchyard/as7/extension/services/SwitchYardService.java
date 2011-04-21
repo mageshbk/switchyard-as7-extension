@@ -26,7 +26,6 @@ import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
 import org.jboss.msc.value.InjectedValue;
-import org.switchyard.as7.extension.deployment.SwitchYardDeploymentState;
 import org.switchyard.as7.extension.deployment.SwitchYardDeployment;
 
 /**
@@ -77,9 +76,7 @@ public class SwitchYardService implements Service<SwitchYardDeployment> {
 
     @Override
     public void stop(StopContext context) {
-        if (_switchyardDeployment.getDeploymentState() == SwitchYardDeploymentState.STARTED) {
-            _switchyardDeployment.stop();
-        }
+        _switchyardDeployment.stop();
     }
 
     /**

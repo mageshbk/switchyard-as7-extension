@@ -26,7 +26,7 @@
 
     <resources>
         <resource-root path="switchyard-api-${project.parent.version}.jar"/>
-        <resource-root path="switchyard-common-xml-${project.parent.version}.jar"/>
+        <resource-root path="switchyard-common-${project.parent.version}.jar"/>
         <resource-root path="switchyard-config-${project.parent.version}.jar"/>
         <resource-root path="switchyard-deploy-${project.parent.version}.jar"/>
         <resource-root path="switchyard-extensions-wsdl-${project.parent.version}.jar"/>
@@ -43,6 +43,8 @@
 
     <dependencies>
         <module name="javax.api"/>
+        <module name="javax.enterprise.api"/>
+        <module name="javax.xml.stream.api"/>
         <module name="org.jboss.as.controller"/>
         <module name="org.jboss.staxmapper"/>
         <module name="org.jboss.logging"/>
