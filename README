@@ -11,7 +11,7 @@ SwitchYard AS7 Deployment stuff
     ...
     <subsystem xmlns="urn:jboss:domain:switchyard:1.0"/>
 
-TODO: 
------
-Need to add a schema file for the subsystem.
-Integrate Bean component, SOAP component seem to work (just tested deploy stuff)
+3. Add Bean and SOAP component jars to as7/modules/org/switchyard/main
+4. Uncomment the Bean and SOAP component configurations in as7/modules/org/switchyard/main/module.xml
+5. Deploy m1app
+6. Test with soapUI client
